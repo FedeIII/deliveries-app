@@ -12,6 +12,10 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
 db.init_app(app)
 
+from gateway import Gateway
+gateway = Gateway({})
+gateway.set_routes(app)
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
