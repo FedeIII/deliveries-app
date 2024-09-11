@@ -18,7 +18,7 @@ class DeliveryRoutes:
             except BadRequestError as error:
                 return jsonify({"msg": error.args[0]}), 400
             else:
-                return jsonify({"msg": "Warehouse created successfully", "id": delivery.id}), 201
+                return jsonify({"msg": "Delivery created successfully", "id": delivery.id}), 201
 
         @app.route('/deliveries/<delivery_id>', methods=['GET'])
         @jwt_required()
@@ -37,3 +37,39 @@ class DeliveryRoutes:
                         "latitude": delivery.lat,
                         "longitude": delivery.lng
                     }}), 201
+                
+        @app.route('/deliveries/<delivery_id>', methods=['POST'])
+        @jwt_required()
+        def set_delivery_products(delivery_id):
+            product_ids = request.json.get('product_ids', [])
+
+            try:
+                delivery = self.deps['delivery_service'].set_products(
+                    delivery_id, product_ids)
+            except BadRequestError as error:
+                return jsonify({"msg": error.args[0]}), 400
+            except NotFoundError as error:
+                return jsonify({"msg": error.args[0], "id": delivery_id, "product_ids": product_ids}), 404
+            else:
+                return jsonify({
+                    "msg": "Products set in the delivery successfully",
+                    "id": delivery.id,
+                    "product_ids": product_ids
+                }), 201
+
+        @app.route('/deliveries/<delivery_id>/products', methods=['GET'])
+        @jwt_required()
+        def get_delivery_products(delivery_id):
+            try:
+                products = self.deps['delivery_service'].get_products(
+                    delivery_id)
+            except BadRequestError as error:
+                return jsonify({"msg": error.args[0]}), 400
+            except NotFoundError as error:
+                return jsonify({"msg": error.args[0], "id": delivery_id}), 404
+            else:
+                return jsonify({
+                    "msg": "Products set in the delivery successfully",
+                    "id": delivery_id,
+                    "product_names": [product.name for product in products]
+                }), 201

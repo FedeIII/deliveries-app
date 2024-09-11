@@ -18,3 +18,28 @@ class DeliveryService:
         if not delivery:
             raise NotFoundError("Delivery not found")
         return delivery
+    
+    def set_products(self, id, product_ids):
+        if not product_ids or len(product_ids) == 0:
+            raise BadRequestError("Missing product ids")
+
+        delivery = self.get(id)
+        if not delivery:
+            raise NotFoundError("Delivery not found")
+        
+        products = self.deps['Product'].find_all(product_ids)
+        if len(products) != len(product_ids):
+            raise NotFoundError("One or more products not found")
+        
+        delivery.set_products(products)
+        return delivery
+
+    def get_products(self, id):
+        delivery = self.get(id)
+        if not delivery:
+            raise NotFoundError("Delivery not found")
+        
+        if len(delivery.products) == 0:
+            raise NotFoundError("Delivery without products")
+        
+        return delivery.products

@@ -87,6 +87,11 @@ class Delivery(db.Model):
 
     def find(id):
         return Delivery.query.filter_by(id=id).first()
+    
+    def set_products(self, products):
+        self.products = products
+        db.session.commit()
+        return self
 
 
 delivery_product = db.Table('delivery_product',

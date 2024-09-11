@@ -43,7 +43,7 @@ class WarehouseRoutes:
 
         @app.route('/warehouses/<warehouse_id>', methods=['POST'])
         @jwt_required()
-        def set_products(warehouse_id):
+        def set_warehouse_products(warehouse_id):
             product_ids = request.json.get('product_ids', [])
 
             try:
@@ -62,7 +62,7 @@ class WarehouseRoutes:
 
         @app.route('/warehouses/<warehouse_id>/products', methods=['GET'])
         @jwt_required()
-        def get_products(warehouse_id):
+        def get_warehouse_products(warehouse_id):
             try:
                 products = self.deps['warehouse_service'].get_products(
                     warehouse_id)

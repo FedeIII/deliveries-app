@@ -27,7 +27,7 @@ user_service = UserService({'User': User})
 product_service = ProductService({'Product': Product})
 warehouse_service = WarehouseService(
     {'Warehouse': Warehouse, 'Product': Product})
-delivery_service = DeliveryService({'Delivery': Delivery})
+delivery_service = DeliveryService({'Delivery': Delivery, 'Product': Product})
 
 user_routes = UserRoutes({
     'user_service': user_service
