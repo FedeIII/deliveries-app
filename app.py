@@ -1,8 +1,11 @@
+from gateway import Gateway
+from services.product_service import ProductService
+from services.user_service import UserService
 from flask import Flask
 from flask_jwt_extended import JWTManager
 import os
 from dotenv import load_dotenv
-from models import User, db
+from models import User, Product, db
 
 load_dotenv()
 
@@ -14,12 +17,13 @@ jwt = JWTManager(app)
 
 db.init_app(app)
 
-from services.user_service import UserService
 user_service = UserService({'User': User})
 
-from gateway import Gateway
+product_service = ProductService({'Product': Product})
+
 gateway = Gateway({
     'user_service': user_service,
+    'product_service': product_service
 })
 gateway.set_routes(app)
 
