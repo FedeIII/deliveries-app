@@ -2,6 +2,7 @@ from gateway import Gateway
 from services.user_service import UserService
 from services.product_service import ProductService
 from services.warehouse_service import WarehouseService
+from services.delivery_service import DeliveryService
 from routes.user_routes import UserRoutes
 from routes.product_routes import ProductRoutes
 from routes.warehouse_routes import WarehouseRoutes
@@ -10,7 +11,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 import os
 from dotenv import load_dotenv
-from models import User, Product, Warehouse, db
+from models import User, Product, Warehouse, Delivery, db
 
 load_dotenv()
 
@@ -25,6 +26,7 @@ db.init_app(app)
 user_service = UserService({'User': User})
 product_service = ProductService({'Product': Product})
 warehouse_service = WarehouseService({'Warehouse': Warehouse})
+delivery_service = DeliveryService({'Delivery': Delivery})
 
 user_routes = UserRoutes({
     'user_service': user_service
@@ -35,7 +37,9 @@ product_routes = ProductRoutes({
 warehouse_routes = WarehouseRoutes({
     'warehouse_service': warehouse_service
 })
-delivery_routes = DeliveryRoutes({})
+delivery_routes = DeliveryRoutes({
+    'delivery_service': delivery_service
+})
 
 gateway = Gateway({
     'user_routes': user_routes,

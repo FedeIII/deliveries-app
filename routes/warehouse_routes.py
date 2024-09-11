@@ -33,7 +33,7 @@ class WarehouseRoutes:
                 return jsonify({"msg": error.args[0], "id": warehouse_id}), 404
             else:
                 return jsonify({
-                    "msg": "Product found",
+                    "msg": "Warehouse found",
                     "payload": {
                         "id": warehouse.id,
                         "name": warehouse.name,
