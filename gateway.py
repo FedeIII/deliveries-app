@@ -1,5 +1,7 @@
 
 from flask import request, jsonify
+from flask_jwt_extended import jwt_required, create_access_token
+from services.errors import BadRequestError
             
 class Gateway:
     def __init__(self, deps):
@@ -11,16 +13,25 @@ class Gateway:
         def register_user():
             username = request.json.get('username', None)
             password = request.json.get('password', None)
-            return jsonify({"username": username, "password": password}), 200
+            try:
+                self.deps['user_service'].register(username, password)
+            except BadRequestError as error:
+                return jsonify({"msg": error.args[0]}), 400
+            else:
+                return jsonify({"msg": f"User {username} created successfully"}), 201
         
         @app.route('/login', methods=['POST'])
         def login_user():
             username = request.json.get('username', None)
             password = request.json.get('password', None)
-            return jsonify({"username": username, "password": password}), 200
+            if self.deps['user_service'].check_password(username, password):
+                access_token = create_access_token(identity=username)
+                return jsonify(access_token=access_token), 200
+            return jsonify({"msg": "Bad username or password"}), 401
         
         # Product
         @app.route('/products', methods=['POST'])
+        @jwt_required()
         def add_product():
             name = request.json.get('name', None)
             return jsonify({"name": name}), 200
@@ -31,6 +42,7 @@ class Gateway:
         
         # Warehouse
         @app.route('/warehouses', methods=['POST'])
+        @jwt_required()
         def add_warehouse():
             name = request.json.get('name', None)
             lat = request.json.get('lat', None)
@@ -38,16 +50,19 @@ class Gateway:
             return jsonify({"name": name, "lat": lat, "lng": lng}), 200
         
         @app.route('/warehouses/<warehouse_id>', methods=['GET'])
+        @jwt_required()
         def get_warehouse(warehouse_id):
             return jsonify({"warehouse_id": warehouse_id}), 200
         
         # Delivery
         @app.route('/deliveries', methods=['POST'])
+        @jwt_required()
         def add_delivery():
             lat = request.json.get('lat', None)
             lng = request.json.get('lng', None)
             return jsonify({"lat": lat, "lng": lng}), 200
         
         @app.route('/deliveries/<delivery_id>', methods=['GET'])
+        @jwt_required()
         def get_delivery(delivery_id):
             return jsonify({"delivery_id": delivery_id}), 200
