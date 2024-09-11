@@ -23,3 +23,23 @@ Tasks are estimated based on story points, considering 1 story point as the simp
 - **Optimal route calculation**: [3sp] Approach definition for the algorithm and time estimation
 
 ---
+
+## ✅ **Install and run**
+
+Create and activate a virtual environment:
+```console
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install dependencies:
+```console
+pip install -r requirements.txt
+```
+
+Create a .env file with the correct values (you can copy the .env.example for local dev)
+
+Run the app:
+```console
+./run.sh
+```
