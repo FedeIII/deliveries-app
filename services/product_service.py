@@ -1,4 +1,4 @@
-from .errors import BadRequestError
+from .errors import BadRequestError, NotFoundError
 
 
 class ProductService:
@@ -15,4 +15,6 @@ class ProductService:
         if not id:
             raise BadRequestError("Missing product id")
         product = self.deps['Product'].find(id)
+        if not product:
+            raise NotFoundError("Product not found")
         return product

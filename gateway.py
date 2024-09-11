@@ -49,7 +49,7 @@ class Gateway:
             except BadRequestError as error:
                 return jsonify({"msg": error.args[0]}), 400
             except NotFoundError as error:
-                return jsonify({"msg": error.args[0]}), 404
+                return jsonify({"msg": error.args[0], "id": product_id}), 404
             else:
                 return jsonify({
                     "msg": "Product found",
