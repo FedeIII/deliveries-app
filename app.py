@@ -1,17 +1,11 @@
 from gateway import Gateway
-from services.user_service import UserService
-from services.product_service import ProductService
-from services.warehouse_service import WarehouseService
-from services.delivery_service import DeliveryService
-from routes.user_routes import UserRoutes
-from routes.product_routes import ProductRoutes
-from routes.warehouse_routes import WarehouseRoutes
-from routes.delivery_routes import DeliveryRoutes
+from models import db, User, Product, Warehouse, Delivery
+from services import UserService, ProductService, WarehouseService, DeliveryService
+from routes import UserRoutes, ProductRoutes, WarehouseRoutes, DeliveryRoutes
 from flask import Flask
 from flask_jwt_extended import JWTManager
 import os
 from dotenv import load_dotenv
-from models import User, Product, Warehouse, Delivery, db
 
 load_dotenv()
 
