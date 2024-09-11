@@ -24,10 +24,10 @@ Tasks are estimated based on story points, considering 1 story point as the simp
     - [2sp] Service to create and get Wharehouses
 - **Create and retrieve deliveries**:
     - [2sp] Service to create and get Deliveries
-- **List products in warehouse**:
-    - [2sp] list_products method in Wharehouse service
-- **List products in delivery**:
-    - [2sp] list_products method in Delivery service
+- **Set and list products in warehouse**:
+    - [3sp] set_products and list_products endpoints and Wharehouse service methods
+- **Set and list products in delivery**:
+    - [3sp] set_prodcuts and list_products endpoints and Delivery service methods
 - **Optimal route calculation**:
     - [3sp] Approach definition for the algorithm and time estimation
 
