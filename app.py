@@ -25,7 +25,8 @@ db.init_app(app)
 
 user_service = UserService({'User': User})
 product_service = ProductService({'Product': Product})
-warehouse_service = WarehouseService({'Warehouse': Warehouse})
+warehouse_service = WarehouseService(
+    {'Warehouse': Warehouse, 'Product': Product})
 delivery_service = DeliveryService({'Delivery': Delivery})
 
 user_routes = UserRoutes({

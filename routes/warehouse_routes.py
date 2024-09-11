@@ -40,3 +40,39 @@ class WarehouseRoutes:
                         "latitude": warehouse.lat,
                         "longitude": warehouse.lng
                     }}), 201
+
+        @app.route('/warehouses/<warehouse_id>', methods=['POST'])
+        @jwt_required()
+        def set_products(warehouse_id):
+            product_ids = request.json.get('product_ids', [])
+
+            try:
+                warehouse = self.deps['warehouse_service'].set_products(
+                    warehouse_id, product_ids)
+            except BadRequestError as error:
+                return jsonify({"msg": error.args[0]}), 400
+            except NotFoundError as error:
+                return jsonify({"msg": error.args[0], "id": warehouse_id, "product_ids": product_ids}), 404
+            else:
+                return jsonify({
+                    "msg": "Products set in the warehouse successfully",
+                    "id": warehouse.id,
+                    "product_ids": product_ids
+                }), 201
+
+        @app.route('/warehouses/<warehouse_id>/products', methods=['GET'])
+        @jwt_required()
+        def get_products(warehouse_id):
+            try:
+                products = self.deps['warehouse_service'].get_products(
+                    warehouse_id)
+            except BadRequestError as error:
+                return jsonify({"msg": error.args[0]}), 400
+            except NotFoundError as error:
+                return jsonify({"msg": error.args[0], "id": warehouse_id}), 404
+            else:
+                return jsonify({
+                    "msg": "Products set in the warehouse successfully",
+                    "id": warehouse_id,
+                    "product_names": [product.name for product in products]
+                }), 201

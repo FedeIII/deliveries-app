@@ -35,6 +35,9 @@ class Product(db.Model):
 
     def find(id):
         return Product.query.filter_by(id=id).first()
+    
+    def find_all(ids):
+        return Product.query.filter(Product.id.in_(ids)).all()
 
 
 class Warehouse(db.Model):
@@ -53,6 +56,12 @@ class Warehouse(db.Model):
 
     def find(id):
         return Warehouse.query.filter_by(id=id).first()
+    
+    def set_products(self, products):
+        self.products = products
+        db.session.commit()
+        return self
+    
 
 
 warehouse_product = db.Table('warehouse_product',
