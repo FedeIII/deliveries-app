@@ -105,6 +105,9 @@ The next iterations for the solution should attack each of these assumptions:
 
 For the optimal route calculation, I would solve it as a **Traveling Salesman Problem** with extra complexity because of the product constraints. These are the different approaches I would try with their story points:
 
-1. [3sp] **Greedy algorithm**: With the same starting point assumption than the current one, pick the next delivery based on proximity. When not enough products are available, pick the nearest warehouse too.
+1. [3sp] **Greedy algorithm**: With the same starting point assumption than the current one, pick the next delivery based on proximity. When not enough products are available, pick the nearest warehouse too. Maybe add extra heuristics to try to optimizy it further, for example:
+  - When going to a warehouse for products, pass through warehouses less than X distance from the path to retrieve other products needed in the future
+  - Bundle deliveries that are less than X distance together and go to all their products before going to them
+  - etc
 2. [5sp] If a more optimal solution is needed, try with **Google's OR-Tools** or a similar optimization library
 3. [13sp] If there are hidden constraints or too difficult to model and extra optimization is needed, **Genetic Algorithms** could leverage those.

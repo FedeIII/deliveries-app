@@ -21,14 +21,20 @@ def get_product_warehouses(deliveries):
 
 
 def get_warehouse_for_product(product_warehouses, product_id):
+    # TO DO: pick the nearest warehouse for the product, instead of the first one in the list
     return product_warehouses[product_id][0]
 
 
 def get_warehouse_product_ids(warehouse):
     return [product.id for product in warehouse.products]
 
+def get_next_delivery(deliveries_left, delivery_map):
+    # TO DO: pick the following delivery as the nearest one, instead of the first of the ones left
+    next_delivery_id = deliveries_left[0]
+    return delivery_map[next_delivery_id]
 
 def get_first_step(product_warehouses, deliveries):
+    # TO DO: pick as starting warehouse one with ALL or THE MOST products of ANY delivery
     first_product_id = deliveries[0].products[0].id
     first_warehouse = product_warehouses[first_product_id][0]
     return {
@@ -84,8 +90,7 @@ def calculate_route(deliveries):
     next_step = first_step.copy()
 
     while (len(next_step["deliveries_left"]) != 0):
-        next_delivery_id = next_step["deliveries_left"][0]
-        next_delivery = delivery_map[next_delivery_id]
+        next_delivery = get_next_delivery(next_step["deliveries_left"], delivery_map)
 
         next_delivery_products = set(
             [product.id for product in next_delivery.products])
