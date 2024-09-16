@@ -29,9 +29,10 @@ def get_warehouse_product_ids(warehouse):
 
 
 def get_first_step(product_warehouses, deliveries):
-    first_warehouse = product_warehouses[next(iter(product_warehouses))][0]
+    first_product_id = deliveries[0].products[0].id
+    first_warehouse = product_warehouses[first_product_id][0]
     return {
-        "type": "warehouse",
+        "id": f"warehouse-{first_warehouse.id}",
         "lat": first_warehouse.lat,
         "lng": first_warehouse.lng,
         "products": get_warehouse_product_ids(first_warehouse),
@@ -41,19 +42,12 @@ def get_first_step(product_warehouses, deliveries):
 
 def get_next_delivery_step(next_delivery, previous_step):
     return {
-        "type": "delivery",
+        "id": f"delivery-{next_delivery.id}",
         "lat": next_delivery.lat,
         "lng": next_delivery.lng,
         "products": previous_step["products"],
         "deliveries_left": remove_elements_from_list(previous_step["deliveries_left"], [next_delivery.id])
     }
-
-
-def get_last_step(first_step, previous_step):
-    last_step = first_step.copy()
-    last_step.update(
-        {"products": previous_step["products"], "deliveries_left": previous_step["deliveries_left"]})
-    return last_step
 
 
 def get_next_warehouse_step(next_delivery_products, route_products, product_warehouses, previous_step):
@@ -62,12 +56,21 @@ def get_next_warehouse_step(next_delivery_products, route_products, product_ware
     warehouse_for_missing_product = get_warehouse_for_product(
         product_warehouses, missing_product_id)
     return {
-        "type": "warehouse",
+        "id": f"warehouse-{warehouse_for_missing_product.id}",
         "lat": warehouse_for_missing_product.lat,
         "lng": warehouse_for_missing_product.lng,
         "products": list(set(previous_step["products"] + get_warehouse_product_ids(warehouse_for_missing_product))),
         "deliveries_left": previous_step["deliveries_left"]
     }
+
+
+def get_last_step(first_step, previous_step):
+    last_step = first_step.copy()
+    last_step.update({
+        "products": previous_step["products"],
+        "deliveries_left": previous_step["deliveries_left"]
+    })
+    return last_step
 
 
 def calculate_route(deliveries):
