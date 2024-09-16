@@ -37,7 +37,7 @@ class DeliveryRoutes:
                         "latitude": delivery.lat,
                         "longitude": delivery.lng
                     }}), 201
-                
+
         @app.route('/deliveries/<delivery_id>', methods=['POST'])
         @jwt_required()
         def set_delivery_products(delivery_id):
@@ -72,4 +72,21 @@ class DeliveryRoutes:
                     "msg": "Products set in the delivery successfully",
                     "id": delivery_id,
                     "product_names": [product.name for product in products]
+                }), 201
+
+        @app.route('/deliveries/route', methods=['GET'])
+        @jwt_required()
+        def get_delivery_route():
+            try:
+                delivery_ids = request.json.get('delivery_ids', [])
+                route = self.deps['delivery_service'].get_route(
+                    delivery_ids)
+            except BadRequestError as error:
+                return jsonify({"msg": error.args[0]}), 400
+            except NotFoundError as error:
+                return jsonify({"msg": error.args[0]}), 404
+            else:
+                return jsonify({
+                    "msg": "Route calculated successfully",
+                    "route": [warehouse for warehouse in route]
                 }), 201

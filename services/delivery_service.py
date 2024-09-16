@@ -1,4 +1,5 @@
 from .errors import BadRequestError, NotFoundError
+from domain.calculate_route import calculate_route
 
 
 class DeliveryService:
@@ -18,7 +19,7 @@ class DeliveryService:
         if not delivery:
             raise NotFoundError("Delivery not found")
         return delivery
-    
+
     def set_products(self, id, product_ids):
         if not product_ids or len(product_ids) == 0:
             raise BadRequestError("Missing product ids")
@@ -26,11 +27,11 @@ class DeliveryService:
         delivery = self.get(id)
         if not delivery:
             raise NotFoundError("Delivery not found")
-        
+
         products = self.deps['Product'].find_all(product_ids)
         if len(products) != len(product_ids):
             raise NotFoundError("One or more products not found")
-        
+
         delivery.set_products(products)
         return delivery
 
@@ -38,8 +39,15 @@ class DeliveryService:
         delivery = self.get(id)
         if not delivery:
             raise NotFoundError("Delivery not found")
-        
+
         if len(delivery.products) == 0:
             raise NotFoundError("Delivery without products")
-        
+
         return delivery.products
+
+    def get_route(self, delivery_ids):
+        deliveries = [self.get(id) for id in delivery_ids]
+        if len(deliveries) != len(delivery_ids):
+            raise NotFoundError("One or more deliveries not found")
+
+        return calculate_route(deliveries)
